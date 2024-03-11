@@ -1,0 +1,16 @@
+PODS:
+  - SauceLive_iOS (0.0.1)
+
+DEPENDENCIES:
+  - SauceLive_iOS (from `../`)
+
+EXTERNAL SOURCES:
+  SauceLive_iOS:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SauceLive_iOS: f43c0b7c9461a98c58e3b415be779080912b3362
+
+PODFILE CHECKSUM: 00d157c0dd1617af9e6d88362de5bc89cd22921d
+
+COCOAPODS: 1.13.0

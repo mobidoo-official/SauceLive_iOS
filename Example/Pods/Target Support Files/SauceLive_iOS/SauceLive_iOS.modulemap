@@ -1,0 +1,6 @@
+framework module SauceLive_iOS {
+  umbrella header "SauceLive_iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
