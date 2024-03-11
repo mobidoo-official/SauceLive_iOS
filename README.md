@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# SauceLive_iOS
-SauceLive SDK
-=======
 
 # SauceLive_iOS
 
@@ -39,4 +35,3 @@ SauceLive_iOS는 또한 Swift Package Manager를 통해 설치할 수 있습니�
 https://github.com/mobidoo-official/SauceLive_iOS.git
 ```
 그 다음, 원하는 버전의 라이브러리를 선택하고 프로젝트에 추가합니다.
->>>>>>> d3d2251 ([feat] init)
