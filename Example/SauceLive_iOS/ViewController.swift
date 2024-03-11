@@ -170,7 +170,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
             isMoveBannerEnabled: handlerStates[.moveBanner] ?? false,
             isOnShareEnabled: handlerStates[.onShare] ?? false,
             isPictureInPictureEnabled: handlerStates[.pictureInPicture] ?? false,
-            isPIPAcive: false,
+            isPIPAcive: false, 
+            isPIPSize: CGSize(width: 200, height: 200),
+            
             delegate: webViewController
         )
         
@@ -193,7 +195,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             isMoveBannerEnabled: handlerStates[.moveBanner] ?? false,
             isOnShareEnabled: handlerStates[.onShare] ?? false,
             isPictureInPictureEnabled: handlerStates[.pictureInPicture] ?? false,
-            isPIPAcive: true,
+            isPIPAcive: true, 
+            isPIPSize: CGSize(width: 300, height: 200),
             delegate: webViewController
         )
         

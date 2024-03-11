@@ -12,19 +12,21 @@ public struct SauceViewControllerConfig {
     public var isOnShareEnabled: Bool
     public var isPictureInPictureEnabled: Bool
     public var isPIPAcive: Bool
+    public var isPIPSize: CGSize
     public weak var delegate: SauceLiveDelegate? // Delegate 추가
     
-    public init(url: String, isEnterEnabled: Bool, isMoveExitEnabled: Bool, isMoveLoginEnabled: Bool, isMoveProductEnabled: Bool, isMoveBannerEnabled: Bool, isOnShareEnabled: Bool, isPictureInPictureEnabled: Bool, isPIPAcive: Bool, delegate: SauceLiveDelegate?) {
-        self.url = url
-        self.isEnterEnabled = isEnterEnabled
-        self.isMoveExitEnabled = isMoveExitEnabled
-        self.isMoveLoginEnabled = isMoveLoginEnabled
-        self.isMoveProductEnabled = isMoveProductEnabled
-        self.isMoveBannerEnabled = isMoveBannerEnabled
-        self.isOnShareEnabled = isOnShareEnabled
-        self.isPictureInPictureEnabled = isPictureInPictureEnabled
-        self.isPIPAcive = isPIPAcive
-        self.delegate = delegate
+    public init(url: String, isEnterEnabled: Bool, isMoveExitEnabled: Bool, isMoveLoginEnabled: Bool, isMoveProductEnabled: Bool, isMoveBannerEnabled: Bool, isOnShareEnabled: Bool, isPictureInPictureEnabled: Bool, isPIPAcive: Bool, isPIPSize: CGSize, delegate: SauceLiveDelegate?) {
+            self.url = url
+            self.isEnterEnabled = isEnterEnabled
+            self.isMoveExitEnabled = isMoveExitEnabled
+            self.isMoveLoginEnabled = isMoveLoginEnabled
+            self.isMoveProductEnabled = isMoveProductEnabled
+            self.isMoveBannerEnabled = isMoveBannerEnabled
+            self.isOnShareEnabled = isOnShareEnabled
+            self.isPictureInPictureEnabled = isPictureInPictureEnabled
+            self.isPIPAcive = isPIPAcive
+            self.isPIPSize = isPIPSize
+            self.delegate = delegate
     }
 }
 
@@ -56,7 +58,7 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     private var contentController = WKUserContentController()
     public weak var delegate: SauceLiveDelegate?
     public var messageHandlerNames: [MessageHandlerName] = []
-    public var pictureInPictureSize: CGSize = CGSize(width: 100, height: 200)
+    public var pipSize: CGSize = CGSize(width: 100, height: 200)
     
     private var leftButton: UIButton!
     private var rightButton: UIButton!
@@ -78,6 +80,7 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
         }
         self.url = config.url
         self.delegate = config.delegate
+        pipSize = config.isPIPSize
         // Additional configuration based on the provided config
         configureMessageHandlers(with: config)
         if let url = self.url {
