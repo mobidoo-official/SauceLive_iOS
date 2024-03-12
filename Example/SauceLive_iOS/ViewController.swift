@@ -160,48 +160,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        let webViewController = SauceViewController()
-        let config = SauceViewControllerConfig(
-            url: urlString,
-            isEnterEnabled: handlerStates[.enter] ?? false,
-            isMoveExitEnabled: handlerStates[.moveExit] ?? false,
-            isMoveLoginEnabled: handlerStates[.moveLogin] ?? false,
-            isMoveProductEnabled: handlerStates[.moveProduct] ?? false,
-            isMoveBannerEnabled: handlerStates[.moveBanner] ?? false,
-            isOnShareEnabled: handlerStates[.onShare] ?? false,
-            isPictureInPictureEnabled: handlerStates[.pictureInPicture] ?? false,
-            isPIPAcive: false, 
-            isPIPSize: CGSize(width: 200, height: 200),
-            
-            delegate: webViewController
-        )
-        
-        webViewController.configure(with: config)
-        PIPKit.show(with: webViewController)
+        let sauceViewController = SauceViewController()
+        sauceViewController.urlString = urlString
+        sauceViewController.handlerStates = handlerStates
+        PIPKit.show(with: sauceViewController)
     }
     
     @objc private func openPIPViewController() {
-        guard let urlString = urlTextField.text, let url = URL(string: urlString) else {
-            print("Invalid URL")
+        guard let urlString = urlTextField.text else {
+            print("유효하지 않은 URL")
             return
         }
-        let webViewController = SauceViewController()
-        let config = SauceViewControllerConfig(
-            url: urlString,
-            isEnterEnabled: handlerStates[.enter] ?? false,
-            isMoveExitEnabled: handlerStates[.moveExit] ?? false,
-            isMoveLoginEnabled: handlerStates[.moveLogin] ?? false,
-            isMoveProductEnabled: handlerStates[.moveProduct] ?? false,
-            isMoveBannerEnabled: handlerStates[.moveBanner] ?? false,
-            isOnShareEnabled: handlerStates[.onShare] ?? false,
-            isPictureInPictureEnabled: handlerStates[.pictureInPicture] ?? false,
-            isPIPAcive: true, 
-            isPIPSize: CGSize(width: 300, height: 200),
-            delegate: webViewController
-        )
         
-        webViewController.configure(with: config)
-        PIPKit.show(with: webViewController)
+        let sauceViewController = SauceViewController()
+        sauceViewController.urlString = urlString
+        sauceViewController.handlerStates = handlerStates
+        PIPKit.show(with: sauceViewController)
     }
     
     private func setupGestureToHideKeyboard() {
@@ -218,3 +192,4 @@ class ViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 }
+

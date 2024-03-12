@@ -2,34 +2,6 @@ import Foundation
 import UIKit
 import WebKit
 
-public struct SauceViewControllerConfig {
-    public var url: String
-    public var isEnterEnabled: Bool
-    public var isMoveExitEnabled: Bool
-    public var isMoveLoginEnabled: Bool
-    public var isMoveProductEnabled: Bool
-    public var isMoveBannerEnabled: Bool
-    public var isOnShareEnabled: Bool
-    public var isPictureInPictureEnabled: Bool
-    public var isPIPAcive: Bool
-    public var isPIPSize: CGSize
-    public weak var delegate: SauceLiveDelegate? // Delegate 추가
-    
-    public init(url: String, isEnterEnabled: Bool, isMoveExitEnabled: Bool, isMoveLoginEnabled: Bool, isMoveProductEnabled: Bool, isMoveBannerEnabled: Bool, isOnShareEnabled: Bool, isPictureInPictureEnabled: Bool, isPIPAcive: Bool, isPIPSize: CGSize, delegate: SauceLiveDelegate?) {
-            self.url = url
-            self.isEnterEnabled = isEnterEnabled
-            self.isMoveExitEnabled = isMoveExitEnabled
-            self.isMoveLoginEnabled = isMoveLoginEnabled
-            self.isMoveProductEnabled = isMoveProductEnabled
-            self.isMoveBannerEnabled = isMoveBannerEnabled
-            self.isOnShareEnabled = isOnShareEnabled
-            self.isPictureInPictureEnabled = isPictureInPictureEnabled
-            self.isPIPAcive = isPIPAcive
-            self.isPIPSize = isPIPSize
-            self.delegate = delegate
-    }
-}
-
 public enum MessageHandlerName: String {
     case enter = "sauceflexEnter"
     case moveExit = "sauceflexMoveExit"
@@ -52,7 +24,56 @@ public enum MessageHandlerName: String {
     @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveOnShareMessage message: WKScriptMessage)
 }
 
-open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
+// SauceLiveManager 프로토콜 추가
+protocol SauceLiveManager: AnyObject {
+    func configure(with config: SauceViewControllerConfig)
+    func loadURL(_ urlString: String)
+    func startPictureInPicture()
+    func stopPictureInPicture()
+}
+
+public struct SauceViewControllerConfig {
+    public let url: String
+    public let isEnterEnabled: Bool
+    public let isMoveExitEnabled: Bool
+    public let isMoveLoginEnabled: Bool
+    public let isMoveProductEnabled: Bool
+    public let isMoveBannerEnabled: Bool
+    public let isOnShareEnabled: Bool
+    public let isPictureInPictureEnabled: Bool
+    public let isPIPAcive: Bool
+    public let isPIPSize: CGSize
+    public weak var delegate: SauceLiveDelegate? // Delegate 추가
+    
+    public init(url: String,
+                isEnterEnabled: Bool? = false,
+                isMoveExitEnabled: Bool? = false,
+                isMoveLoginEnabled: Bool? = false,
+                isMoveProductEnabled: Bool? = false,
+                isMoveBannerEnabled: Bool? = false,
+                isOnShareEnabled: Bool? = false,
+                isPictureInPictureEnabled: Bool? = false,
+                isPIPAcive: Bool? = false,
+                isPIPSize: CGSize,
+                delegate: SauceLiveDelegate?) {
+        
+        self.url = url
+        self.isEnterEnabled = isEnterEnabled ?? false
+        self.isMoveExitEnabled = isMoveExitEnabled ?? false
+        self.isMoveLoginEnabled = isMoveLoginEnabled ?? false
+        self.isMoveProductEnabled = isMoveProductEnabled ?? false
+        self.isMoveBannerEnabled = isMoveBannerEnabled ?? false
+        self.isOnShareEnabled = isOnShareEnabled ?? false
+        self.isPictureInPictureEnabled = isPictureInPictureEnabled ?? false
+        self.isPIPAcive = isPIPAcive ?? false
+        self.isPIPSize = isPIPSize
+        self.delegate = delegate
+    }
+}
+
+
+
+open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, SauceLiveManager {
     
     public var webView: WKWebView!
     private var contentController = WKUserContentController()
@@ -89,7 +110,11 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     }
     
     public func loadURL(_ urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
         let request = URLRequest(url: url)
         webView.load(request)
     }
@@ -108,11 +133,11 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     }
     
     private func registerMessageHandlers() {
-            contentController.removeAllUserScripts()
-            messageHandlerNames.forEach { name in
-                contentController.add(self, name: name.rawValue)
-            }
+        contentController.removeAllUserScripts()
+        messageHandlerNames.forEach { name in
+            contentController.add(self, name: name.rawValue)
         }
+    }
     
     public func configureWebView() {
         let configuration = WKWebViewConfiguration()
