@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import AVKit
 import WebKit
 
 public enum MessageHandlerName: String {
@@ -73,7 +74,7 @@ public struct SauceViewControllerConfig {
 
 
 
-open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, SauceLiveManager {
+open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AVPictureInPictureControllerDelegate, SauceLiveManager {
     
     public var webView: WKWebView!
     private var contentController = WKUserContentController()
@@ -85,6 +86,9 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     private var rightButton: UIButton!
     
     public var url: String?
+    
+    public var pipController: AVPictureInPictureController?
+    
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -255,6 +259,7 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
         switch message.name {
         case MessageHandlerName.enter.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveEnterMessage: message)
+            playVideoInPictureInPictureMode(urlString: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
         case MessageHandlerName.moveExit.rawValue:
             PIPKit.dismiss(animated: true)
             delegate?.sauceLiveManager?(self, didReceiveMoveExitMessage: message)
@@ -267,13 +272,69 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
         case MessageHandlerName.onShare.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveOnShareMessage: message)
         case MessageHandlerName.pictureInPicture.rawValue:
-            startPictureInPicture()
+            pipController?.startPictureInPicture()
+           
+            //startPictureInPicture()
         default:
             break
         }
     }
+    
+    func playVideoInPictureInPictureMode(urlString: String) {
+        guard let url = URL(string: urlString) else {
+            print("Invalid video URL")
+            return
+        }
+        
+        player = AVPlayer(url: url)
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 150) // Adjust frame as per your requirement
+        
+        let pipViewController = AVPlayerViewController()
+        pipViewController.player = player
+        addChild(pipViewController)
+        view.addSubview(pipViewController.view)
+        pipController = AVPictureInPictureController(playerLayer: playerLayer)
+        pipController?.delegate = self
+    }
 }
 
+// MARK: - WKNavigationDelegate
+extension SauceLiveViewController: WKNavigationDelegate {
+    // Handle navigation delegate methods if needed
+}
+
+// MARK: - WKUIDelegate
+extension SauceLiveViewController: WKUIDelegate {
+    // Handle UI delegate methods if needed
+}
+
+// MARK: - PIPUsable
 extension SauceLiveViewController: PIPUsable {
     public var initialState: PIPState { return .full }
 }
+
+extension SauceLiveViewController {
+    // MARK: - AVPictureInPictureControllerDelegate
+    
+    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode ended
+        print("Picture in Picture mode ended.")
+    }
+    
+    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode started
+        print("Picture in Picture mode started.")
+    }
+    
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode will end
+        print("Picture in Picture mode will end.")
+    }
+    
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode will start
+        print("Picture in Picture mode will start.")
+    }
+}
+
