@@ -9,7 +9,7 @@ class SauceViewController: SauceLiveViewController {
         super.viewDidLoad()
 
         let config = SauceViewControllerConfig(
-                    url: "https://stage.player.sauceflex.com/broadcast/lkbutterand-2cd937d7220240d080bc3fce51c2e1d9",
+                    url: "https://refactor.player.sauceflex.com/broadcast/lkuiux-a5acf6ee5d024d10b41b6391575b2cd0?",
                     isEnterEnabled: handlerStates[.enter] ?? false,
                     isMoveExitEnabled: handlerStates[.moveExit] ?? false,
                     isMoveLoginEnabled: handlerStates[.moveLogin] ?? false,
