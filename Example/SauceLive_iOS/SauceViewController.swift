@@ -19,6 +19,7 @@ class SauceViewController: SauceLiveViewController {
                     isPictureInPictureEnabled: handlerStates[.pictureInPicture] ?? false,
                     isPIPAcive: false,
                     isPIPSize: CGSize(width: 300, height: 200),
+                    pipMode: .externalMode,
                     delegate: self
                 )
         configure(with: config)

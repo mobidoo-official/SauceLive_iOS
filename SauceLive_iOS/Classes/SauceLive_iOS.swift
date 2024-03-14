@@ -3,6 +3,11 @@ import UIKit
 import AVKit
 import WebKit
 
+public enum PIPMode {
+    case internalMode
+    case externalMode
+}
+
 public enum MessageHandlerName: String {
     case enter = "sauceflexEnter"
     case moveExit = "sauceflexMoveExit"
@@ -44,6 +49,7 @@ public struct SauceViewControllerConfig {
     public let isPictureInPictureEnabled: Bool
     public let isPIPAcive: Bool
     public let isPIPSize: CGSize
+    public let pipMode: PIPMode
     public weak var delegate: SauceLiveDelegate? // Delegate 추가
     
     public init(url: String,
@@ -56,6 +62,7 @@ public struct SauceViewControllerConfig {
                 isPictureInPictureEnabled: Bool? = false,
                 isPIPAcive: Bool? = false,
                 isPIPSize: CGSize,
+                pipMode: PIPMode = .internalMode,
                 delegate: SauceLiveDelegate?) {
         
         self.url = url
@@ -68,6 +75,7 @@ public struct SauceViewControllerConfig {
         self.isPictureInPictureEnabled = isPictureInPictureEnabled ?? false
         self.isPIPAcive = isPIPAcive ?? false
         self.isPIPSize = isPIPSize
+        self.pipMode = pipMode
         self.delegate = delegate
     }
 }
@@ -93,7 +101,9 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     
     var fullScreen: Bool = false
     var originalViewSize: CGSize = .zero
-    var globalStartTime = CMTime(seconds: 10, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    var globalStartTime = CMTime(seconds: 0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    
+    private var pipMode: PIPMode = .internalMode
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,17 +115,18 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         configureWebView()
         setupWebViewLayout()
         setupButtons()
-        if config.isPIPAcive {
-            self.view.isHidden = true
-            openPIPView()
-        }
         self.url = config.url
         self.delegate = config.delegate
+        self.pipMode = config.pipMode
         pipSize = config.isPIPSize
         // Additional configuration based on the provided config
         configureMessageHandlers(with: config)
         if let url = self.url {
             self.loadURL(url)
+        }
+        if config.isPIPAcive {
+            self.view.isHidden = true
+            openPIPView()
         }
     }
     
@@ -234,15 +245,16 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     }
     
     private func openPIPView() {
+       
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            self.startPictureInPicture()
-            self.view.isHidden = false
             let name = "window.dispatchEvent(sauceflexPictureInPictureOn);"
             self.webView.evaluateJavaScript(name) { (Result, Error) in
                 if let error = Error {
                     print("evaluateJavaScript Error : \(error)")
                 }
             }
+            self.startPictureInPicture()
+            self.view.isHidden = false
         }
     }
     
@@ -265,8 +277,9 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         switch message.name {
         case MessageHandlerName.enter.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveEnterMessage: message)
-            playVideoInPictureInPictureMode(urlString: "https://stage-cdn.sauceflex.com/streams/20240312/lkyanolja-475b05e2f811461db5eb2eea3480378d/d1fb0c56168541d7b7cda567a6878dd7_VOD.m3u8")
-            
+            if self.pipMode == .externalMode {
+                playVideoInPictureInPictureMode(urlString: "https://stage-cdn.sauceflex.com/streams/20240312/lkyanolja-475b05e2f811461db5eb2eea3480378d/d1fb0c56168541d7b7cda567a6878dd7_VOD.m3u8")
+            }
         case MessageHandlerName.moveExit.rawValue:
             PIPKit.dismiss(animated: true)
             delegate?.sauceLiveManager?(self, didReceiveMoveExitMessage: message)
@@ -279,31 +292,29 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         case MessageHandlerName.onShare.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveOnShareMessage: message)
         case MessageHandlerName.pictureInPicture.rawValue:
-            let jsonString = "\(message.body)"
-
-            // 문자열을 Data 객체로 변환
-            if let jsonData = jsonString.data(using: .utf8) {
-                do {
-                    // JSONSerialization을 사용해 JSON 데이터를 딕셔너리로 파싱
-                    if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                       
-                        if let currentTime = jsonDict["currentTime"] as? Double {
-                            print("currentTime 값은 \(currentTime)입니다.")
-                            globalStartTime = CMTime(seconds: Double(currentTime), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+            if self.pipMode == .externalMode {
+                let jsonString = "\(message.body)"
+                if let jsonData = jsonString.data(using: .utf8) {
+                    do {
+                        if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                            if let currentTime = jsonDict["currentTime"] as? Double, currentTime != -1 {
+                                globalStartTime = CMTime(seconds: currentTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+                            } else {
+                                print("currentTime 키에 해당하는 Double 값이 없습니다.")
+                            }
                             self.view.frame.size = .zero
                             view.layer.addSublayer(playerLayer!)
                             pipController?.startPictureInPicture()
                             pipController?.playerLayer.frame.size = .zero
-                                    } else {
-                                        print("currentTime 키에 해당하는 Double 값이 없습니다.")
-                                    }
+                        }
+                    } catch {
+                        print("JSON 파싱 중 에러 발생: \(error)")
                     }
-                } catch {
-                    print("JSON 파싱 중 에러 발생: \(error)")
                 }
+                
+            } else {
+                startPictureInPicture()
             }
-        
-           
         default:
             break
         }
@@ -357,10 +368,23 @@ extension SauceLiveViewController {
                     if let error = Error {
                         print("evaluateJavaScript Error : \(error)")
                     } else {
-                        self.stopPictureInPicture()
+    
                     }
                 }
+                let currentSeconds = CMTimeGetSeconds(self.globalStartTime )
+                let seekTime = "dispatchEvent(window.sauceflexPictureInPictureExit(\(Int(currentSeconds))))"
+                
+                print(seekTime)
+                self.webView.evaluateJavaScript(seekTime) { (Result, Error) in
+                    if let error = Error {
+                        print("evaluateJavaScript Error : \(error)")
+                    } else {
+                    }
+                }
+                self.fullScreen = false
+                //pipController?.stopPictureInPicture()
             }
+            
         } else {
             self.dismiss(animated: false)
         }
@@ -382,6 +406,7 @@ extension SauceLiveViewController {
         // PiP mode will end
         print("Picture in Picture mode will end.")
         
+        
     }
     
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
@@ -392,6 +417,11 @@ extension SauceLiveViewController {
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
         print("restore")
         fullScreen = true
+        if let currentTime = player?.currentTime() {
+            globalStartTime =  currentTime
+        } else {
+            globalStartTime = CMTime(seconds: 0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        }
         completionHandler(true)
     }
 }
