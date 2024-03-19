@@ -7,9 +7,9 @@ class SauceViewController: SauceLiveViewController {
     var handlerStates: [MessageHandlerName: Bool] = [:]
     override func viewDidLoad() {
         super.viewDidLoad()
-
+      //  urlString = "https://refactor.player.sauceflex.com/broadcast/lkuiux-a5acf6ee5d024d10b41b6391575b2cd0?"
         let config = SauceViewControllerConfig(
-                    url: "https://refactor.player.sauceflex.com/broadcast/lkuiux-a5acf6ee5d024d10b41b6391575b2cd0?",
+                    url: urlString,
                     isEnterEnabled: handlerStates[.enter] ?? false,
                     isMoveExitEnabled: handlerStates[.moveExit] ?? false,
                     isMoveLoginEnabled: handlerStates[.moveLogin] ?? false,
@@ -33,6 +33,7 @@ extension SauceViewController: SauceLiveDelegate {
     }
     
     func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveExitMessage message: WKScriptMessage) {
+        PIPKit.dismiss(animated: true)
         print("exit")
     }
     

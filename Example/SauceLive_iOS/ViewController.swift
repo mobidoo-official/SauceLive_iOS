@@ -156,7 +156,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func openWebViewController() {
         guard let urlString = urlTextField.text else {
-            print("유효하지 않은 URL")
             return
         }
         
@@ -168,7 +167,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func openPIPViewController() {
         guard let urlString = urlTextField.text else {
-            print("유효하지 않은 URL")
             return
         }
         
