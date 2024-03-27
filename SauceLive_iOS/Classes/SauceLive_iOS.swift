@@ -3,6 +3,11 @@ import UIKit
 import AVKit
 import WebKit
 
+public enum PIPMode {
+    case internalMode
+    case externalMode
+}
+
 public enum MessageHandlerName: String {
     case enter = "sauceflexEnter"
     case moveExit = "sauceflexMoveExit"
@@ -12,6 +17,7 @@ public enum MessageHandlerName: String {
     case onShare = "sauceflexOnShare"
     case onMoveReward = "sauceflexMoveReward"
     case pictureInPicture = "sauceflexPictureInPicture"
+    case videoUrl = "sauceflexSendVideoUrl"
 }
 
 @objc public protocol SauceLiveDelegate: AnyObject {
@@ -44,6 +50,7 @@ public struct SauceViewControllerConfig {
     public let isPictureInPictureEnabled: Bool
     public let isPIPAcive: Bool
     public let isPIPSize: CGSize
+    public let pipMode: PIPMode
     public weak var delegate: SauceLiveDelegate? // Delegate 추가
     
     public init(url: String,
@@ -56,6 +63,7 @@ public struct SauceViewControllerConfig {
                 isPictureInPictureEnabled: Bool? = false,
                 isPIPAcive: Bool? = false,
                 isPIPSize: CGSize,
+                pipMode: PIPMode = .internalMode,
                 delegate: SauceLiveDelegate?) {
         
         self.url = url
@@ -68,11 +76,10 @@ public struct SauceViewControllerConfig {
         self.isPictureInPictureEnabled = isPictureInPictureEnabled ?? false
         self.isPIPAcive = isPIPAcive ?? false
         self.isPIPSize = isPIPSize
+        self.pipMode = pipMode
         self.delegate = delegate
     }
 }
-
-
 
 open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AVPictureInPictureControllerDelegate, SauceLiveManager {
     
@@ -88,10 +95,18 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     public var url: String?
     
     public var pipController: AVPictureInPictureController?
+    public var player: AVPlayer?
+    public var playerLayer: AVPlayerLayer?
     
+    var fullScreen: Bool = false
+    var originalViewSize: CGSize = .zero
+    var globalStartTime = CMTime(seconds: 0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    
+    private var pipMode: PIPMode = .internalMode
     
     open override func viewDidLoad() {
         super.viewDidLoad()
+        originalViewSize = self.view.frame.size
     }
     
     // 구성 객체를 사용하여 SauceLiveViewController 설정
@@ -99,17 +114,18 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         configureWebView()
         setupWebViewLayout()
         setupButtons()
-        if config.isPIPAcive {
-            self.view.isHidden = true
-            openPIPView()
-        }
         self.url = config.url
         self.delegate = config.delegate
+        self.pipMode = config.pipMode
         pipSize = config.isPIPSize
-        // Additional configuration based on the provided config
+
         configureMessageHandlers(with: config)
         if let url = self.url {
             self.loadURL(url)
+        }
+        if config.isPIPAcive {
+            self.view.isHidden = true
+            openPIPView()
         }
     }
     
@@ -125,6 +141,8 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     
     private func configureMessageHandlers(with config: SauceViewControllerConfig) {
         var handlers = [MessageHandlerName]()
+        handlers.append(.videoUrl)
+        
         if config.isEnterEnabled { handlers.append(.enter) }
         if config.isMoveExitEnabled { handlers.append(.moveExit) }
         if config.isMoveLoginEnabled { handlers.append(.moveLogin) }
@@ -229,14 +247,14 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     
     private func openPIPView() {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            self.startPictureInPicture()
-            self.view.isHidden = false
             let name = "window.dispatchEvent(sauceflexPictureInPictureOn);"
             self.webView.evaluateJavaScript(name) { (Result, Error) in
                 if let error = Error {
                     print("evaluateJavaScript Error : \(error)")
                 }
             }
+            self.startPictureInPicture()
+            self.view.isHidden = false
         }
     }
     
@@ -257,11 +275,33 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         switch message.name {
+        case MessageHandlerName.videoUrl.rawValue:
+            if self.pipMode == .externalMode {
+                let jsonString = "\(message.body)"
+                if let jsonData = jsonString.data(using: .utf8) {
+                    do {
+                        if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                            if let urlString = jsonDict["videoUrl"] as? String, url != "null" {
+                                guard let url = URL(string: urlString) else {
+                                    print("Invalid video URL")
+                                    return
+                                }
+                                player = AVPlayer(url: url)
+                                playerLayer = AVPlayerLayer(player: player)
+                                playVideoInPictureInPictureMode()
+                            } else {
+                                print("videoUrl 키에 해당하는 Url 값이 없습니다.")
+                            }
+                        }
+                    } catch {
+                        print("JSON 파싱 중 에러 발생: \(error)")
+                    }
+                }
+                
+            }
         case MessageHandlerName.enter.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveEnterMessage: message)
-            playVideoInPictureInPictureMode(urlString: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
         case MessageHandlerName.moveExit.rawValue:
-            PIPKit.dismiss(animated: true)
             delegate?.sauceLiveManager?(self, didReceiveMoveExitMessage: message)
         case MessageHandlerName.moveLogin.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveMoveLoginMessage: message)
@@ -272,30 +312,43 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         case MessageHandlerName.onShare.rawValue:
             delegate?.sauceLiveManager?(self, didReceiveOnShareMessage: message)
         case MessageHandlerName.pictureInPicture.rawValue:
-            pipController?.startPictureInPicture()
-           
-            //startPictureInPicture()
+            if self.pipMode == .externalMode {
+                
+                let jsonString = "\(message.body)"
+                if let jsonData = jsonString.data(using: .utf8) {
+                    do {
+                        if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                            if let currentTime = jsonDict["currentTime"] as? Double, currentTime != -1 {
+                                globalStartTime = CMTime(seconds: currentTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+                            } else {
+                                print("currentTime 키에 해당하는 Double 값이 없습니다.")
+                            }
+                            self.view.frame.size = .zero
+                            view.layer.addSublayer(playerLayer!)
+                            pipController?.startPictureInPicture()
+                            pipController?.playerLayer.frame.size = .zero
+                        }
+                    } catch {
+                        print("JSON 파싱 중 에러 발생: \(error)")
+                    }
+                }
+                
+            } else {
+                startPictureInPicture()
+            }
         default:
             break
         }
     }
     
-    func playVideoInPictureInPictureMode(urlString: String) {
-        guard let url = URL(string: urlString) else {
-            print("Invalid video URL")
-            return
+    func playVideoInPictureInPictureMode() {
+        guard let playerLayer = playerLayer else { return }
+        playerLayer.frame = view.bounds // 비디오 플레이어의 크기를 설정합니다.
+        // AVPictureInPictureController가 사용 가능한지 확인합니다.
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            pipController = AVPictureInPictureController(playerLayer: playerLayer)
+            pipController?.delegate = self
         }
-        
-        player = AVPlayer(url: url)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 150) // Adjust frame as per your requirement
-        
-        let pipViewController = AVPlayerViewController()
-        pipViewController.player = player
-        addChild(pipViewController)
-        view.addSubview(pipViewController.view)
-        pipController = AVPictureInPictureController(playerLayer: playerLayer)
-        pipController?.delegate = self
     }
 }
 
@@ -320,21 +373,66 @@ extension SauceLiveViewController {
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         // PiP mode ended
         print("Picture in Picture mode ended.")
+        if fullScreen {
+            DispatchQueue.main.async {
+                self.view.frame.size = self.originalViewSize
+                self.playerLayer?.removeFromSuperlayer()
+                self.pipController?.playerLayer.frame.size = self.originalViewSize
+                let name = "window.dispatchEvent(sauceFlexPIP(false));"
+                self.webView.evaluateJavaScript(name) { (Result, Error) in
+                    if let error = Error {
+                        print("evaluateJavaScript Error : \(error)")
+                    } else {
+    
+                    }
+                }
+                let currentSeconds = CMTimeGetSeconds(self.globalStartTime )
+                let seekTime = "dispatchEvent(window.sauceflexPictureInPictureExit(\(Int(currentSeconds))))"
+                self.webView.evaluateJavaScript(seekTime) { (Result, Error) in
+                    if let error = Error {
+                        print("evaluateJavaScript Error : \(error)")
+                    } else {
+                    }
+                }
+                self.fullScreen = false
+            }
+            
+        } else {
+            self.dismiss(animated: false)
+        }
     }
     
     public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        // PiP mode started
-        print("Picture in Picture mode started.")
+         print("Picture in Picture mode started.")
+        let time = globalStartTime
+        player?.seek(to: time, completionHandler: { (completedSeek) in
+            if completedSeek {
+                self.player?.play()
+            }
+        })
     }
     
     public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         // PiP mode will end
         print("Picture in Picture mode will end.")
+        
+        
     }
     
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         // PiP mode will start
         print("Picture in Picture mode will start.")
+    }
+    
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        print("restore")
+        fullScreen = true
+        if let currentTime = player?.currentTime() {
+            globalStartTime =  currentTime
+        } else {
+            globalStartTime = CMTime(seconds: 0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        }
+        completionHandler(true)
     }
 }
 
