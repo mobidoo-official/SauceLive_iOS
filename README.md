@@ -6,8 +6,6 @@
 [![License](https://img.shields.io/cocoapods/l/SauceLive_iOS.svg?style=flat)](https://cocoapods.org/pods/SauceLive_iOS)
 [![Platform](https://img.shields.io/cocoapods/p/SauceLive_iOS.svg?style=flat)](https://cocoapods.org/pods/SauceLive_iOS)
 
-SauceLive_iOS는 iOS 애플리케이션에 웹 콘텐츠와 상호작용을 통합하고, 특히 웹 기반 이벤트를 처리하고, Picture-in-Picture(PIP) 기능을 지원하는 강력한 Swift 라이브러리입니다. UIKit과 WebKit을 기반으로 구축되었으며, 웹 콘텐츠와의 상호작용을 위한 다양한 메시지 핸들러와 이벤트를 지원합니다.
-
 ## 예제
 
 예제 프로젝트를 실행하려면, 레포를 클론하고, Example 디렉토리에서 `pod install`을 실행하여 필요한 종속성을 설치한 후 예제 프로젝트를 열어보세요.

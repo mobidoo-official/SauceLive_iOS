@@ -148,14 +148,9 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     private func setupButtons() {
         leftButton = UIButton(type: .custom)
         rightButton = UIButton(type: .custom)
-        
-        guard let bundleURL = Bundle(for: SauceLiveViewController.self).url(forResource: "assets", withExtension: "bundle"),
-              let bundle = Bundle(url: bundleURL) else {
-            return
-        }
-        
-        let closeImage = UIImage(named: "CloseButton", in: bundle, compatibleWith: nil)
-        let pipImage = UIImage(named: "PIPButton", in: bundle, compatibleWith: nil)
+      
+        let closeImage = UIImage(named: "CloseButton", in: .module, compatibleWith: nil)
+        let pipImage = UIImage(named: "PIPButton", in: .module, compatibleWith: nil)
         
         leftButton.setImage(closeImage, for: .normal)
         rightButton.setImage(pipImage, for: .normal)
