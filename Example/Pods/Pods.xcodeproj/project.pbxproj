@@ -30,6 +30,9 @@
 		D369BFBF4F7F4C6BAB91B09952D6A62A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		DC2D4B2CE1860EDA6342E9C767948A3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AFEC236BBAF488F474C081FA2DCD898 /* Assets.xcassets */; };
 		DD0B519490EE4D202F0B4D16C2803A8F /* SauceLive_iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FF2B59698CDC5113B706F72DBB6A5084 /* SauceLive_iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F9E75F012BB3E3A100393B44 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E75EFE2BB3DEF400393B44 /* APIService.swift */; };
+		F9E75F032BB3E3A800393B44 /* PaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E75EFA2BB3DA7D00393B44 /* PaymentManager.swift */; };
+		F9E75F072BB50B6D00393B44 /* Authorize.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E75F052BB509B900393B44 /* Authorize.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +69,7 @@
 		1CDF01679F01F8C1B6BEFCFB33C67FF3 /* Pods-SauceLive_iOS_Tests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-SauceLive_iOS_Tests"; path = Pods_SauceLive_iOS_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AFCFE7B50C5F2FAA3CDCC566DB26C3B /* Pods-SauceLive_iOS_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SauceLive_iOS_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		38A957D18CDD9EDA734618610A8FD2F3 /* SauceLive_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SauceLive_iOS.debug.xcconfig; sourceTree = "<group>"; };
-		3CE37FE6AF9682BBBF4DAEBEF3A630CD /* SauceLive_iOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SauceLive_iOS.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		3CE37FE6AF9682BBBF4DAEBEF3A630CD /* SauceLive_iOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SauceLive_iOS.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4138595ED06DEC8068DD7B33B9AA3340 /* SauceLive_iOS-assets */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "SauceLive_iOS-assets"; path = assets.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B36E7E2AA644A4A3B3B70F45DE6803 /* Pods-SauceLive_iOS_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SauceLive_iOS_Example-Info.plist"; sourceTree = "<group>"; };
 		4611008FAB7E206F470F4183932941EF /* SauceLive_iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SauceLive_iOS-prefix.pch"; sourceTree = "<group>"; };
@@ -74,11 +77,11 @@
 		4A10030DC497E6C5899921DB93F05A38 /* AVPIPKitUsable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AVPIPKitUsable.swift; sourceTree = "<group>"; };
 		4B3952153A0BF0ECC478C8D1E2B72E84 /* Pods-SauceLive_iOS_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SauceLive_iOS_Example-umbrella.h"; sourceTree = "<group>"; };
 		5AA53DBD957108712CCE8F25FB385468 /* Pods-SauceLive_iOS_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-SauceLive_iOS_Tests.modulemap"; sourceTree = "<group>"; };
-		60A67B0614311E5CE39FED30E8149CDE /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		60A67B0614311E5CE39FED30E8149CDE /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		68C5DE4CD244BEB3BA46B65A006E5F29 /* Pods-SauceLive_iOS_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SauceLive_iOS_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		69FB8D586BCD41085B1F57AE39472164 /* AVPIPKitVideoController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AVPIPKitVideoController.swift; sourceTree = "<group>"; };
 		6A50A8F2A3F10C5E5C9BD509E34BFB5C /* SauceLive_iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SauceLive_iOS-dummy.m"; sourceTree = "<group>"; };
-		6D7E062BE1AFB3320F13AA2B56EE64D5 /* Pods-SauceLive_iOS_Example */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-SauceLive_iOS_Example"; path = Pods_SauceLive_iOS_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D7E062BE1AFB3320F13AA2B56EE64D5 /* Pods_SauceLive_iOS_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SauceLive_iOS_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		73E8204BEBE10B298F1BAFA50A755EEF /* Pods-SauceLive_iOS_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SauceLive_iOS_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		770C68DC86EDD3817D1455C0F6B9632A /* UIWindow+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
@@ -87,8 +90,8 @@
 		81BB7D852F84C1D53157110F4FC615AC /* Pods-SauceLive_iOS_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SauceLive_iOS_Tests-umbrella.h"; sourceTree = "<group>"; };
 		88CEB8F659F003C285BCCA580E1FE210 /* SauceLive_iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SauceLive_iOS-Info.plist"; sourceTree = "<group>"; };
 		93359CDCB894185EC9BB200219922AE4 /* UIViewController+Associated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Associated.swift"; sourceTree = "<group>"; };
-		991E9D6BD4838680EDB6A015B61A2350 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		991E9D6BD4838680EDB6A015B61A2350 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A4CECA897FF18D8E6E7F0F53850B40DB /* Pods-SauceLive_iOS_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SauceLive_iOS_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		AA08083E52E51FC1CCDA59CAF4952777 /* AVPIPKitVideoProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AVPIPKitVideoProvider.swift; sourceTree = "<group>"; };
 		B535E2F00C8DA6E130DB6596214D9E1E /* Pods-SauceLive_iOS_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SauceLive_iOS_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,6 +105,9 @@
 		E67648BCBAF3B0C667CADEA4D2F1946D /* Pods-SauceLive_iOS_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SauceLive_iOS_Example-frameworks.sh"; sourceTree = "<group>"; };
 		E72D9256986A19BE6BA4D87824DCE453 /* Pods-SauceLive_iOS_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SauceLive_iOS_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		F3F1345BB38A33030D9946D11D4999B8 /* Pods-SauceLive_iOS_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SauceLive_iOS_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		F9E75EFA2BB3DA7D00393B44 /* PaymentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentManager.swift; sourceTree = "<group>"; };
+		F9E75EFE2BB3DEF400393B44 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		F9E75F052BB509B900393B44 /* Authorize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authorize.swift; sourceTree = "<group>"; };
 		FF2B59698CDC5113B706F72DBB6A5084 /* SauceLive_iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SauceLive_iOS-umbrella.h"; sourceTree = "<group>"; };
 		FFF927AB479CC8F72B8C73E28B60F81A /* UIView+Associated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Associated.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -196,7 +202,6 @@
 				16C190625C6048DF059482876633F42F /* PIPKitEventDispatcher.swift */,
 				484E5B09940F747D617091B210EA6FAD /* PIPUsable.swift */,
 			);
-			name = PIPKit;
 			path = PIPKit;
 			sourceTree = "<group>";
 		};
@@ -209,7 +214,6 @@
 				69FB8D586BCD41085B1F57AE39472164 /* AVPIPKitVideoController.swift */,
 				AA08083E52E51FC1CCDA59CAF4952777 /* AVPIPKitVideoProvider.swift */,
 			);
-			name = AVPIPKit;
 			path = AVPIPKit;
 			sourceTree = "<group>";
 		};
@@ -237,6 +241,9 @@
 			isa = PBXGroup;
 			children = (
 				1AFEC236BBAF488F474C081FA2DCD898 /* Assets.xcassets */,
+				F9E75F052BB509B900393B44 /* Authorize.swift */,
+				F9E75EFE2BB3DEF400393B44 /* APIService.swift */,
+				F9E75EFA2BB3DA7D00393B44 /* PaymentManager.swift */,
 				BACAEB96B466D22CD5E093D44F7CFEAD /* SauceLive_iOS.swift */,
 				92BB11276EF5C0942A9CD7D046ACEA7C /* PIPKit */,
 				D23D2BB70BCAD9DB5F1D5599A8269506 /* Pod */,
@@ -266,7 +273,7 @@
 		C55A377F3A2FCF8433CD441431448102 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6D7E062BE1AFB3320F13AA2B56EE64D5 /* Pods-SauceLive_iOS_Example */,
+				6D7E062BE1AFB3320F13AA2B56EE64D5 /* Pods_SauceLive_iOS_Example.framework */,
 				1CDF01679F01F8C1B6BEFCFB33C67FF3 /* Pods-SauceLive_iOS_Tests */,
 				09D7EC559044EAA064C280F16BE3ADC6 /* SauceLive_iOS */,
 				4138595ED06DEC8068DD7B33B9AA3340 /* SauceLive_iOS-assets */,
@@ -292,7 +299,6 @@
 				93359CDCB894185EC9BB200219922AE4 /* UIViewController+Associated.swift */,
 				770C68DC86EDD3817D1455C0F6B9632A /* UIWindow+Extension.swift */,
 			);
-			name = Extension;
 			path = Extension;
 			sourceTree = "<group>";
 		};
@@ -360,7 +366,7 @@
 			);
 			name = "Pods-SauceLive_iOS_Example";
 			productName = Pods_SauceLive_iOS_Example;
-			productReference = 6D7E062BE1AFB3320F13AA2B56EE64D5 /* Pods-SauceLive_iOS_Example */;
+			productReference = 6D7E062BE1AFB3320F13AA2B56EE64D5 /* Pods_SauceLive_iOS_Example.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		B510D29F5DB73B0043DAFF482042E74F /* SauceLive_iOS */ = {
@@ -426,6 +432,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					3492B1FE8AF5D547AB65475B54507E3C = {
+						LastSwiftMigration = 1500;
+					};
+				};
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -491,9 +502,12 @@
 				558390A13FA86B8F1741C463CFA4416B /* AVPIPKitUsable+UIKit.swift in Sources */,
 				3B93C53AD37790AAB911261B28CB9909 /* AVPIPKitVideoController.swift in Sources */,
 				5A956B193B05375244C1C17798FE9B69 /* AVPIPKitVideoProvider.swift in Sources */,
+				F9E75F072BB50B6D00393B44 /* Authorize.swift in Sources */,
 				9028C191FBF5B98D188EF5FEF6D3AD94 /* PIPKit.swift in Sources */,
 				1B6DFE9359965780CC6800541E526620 /* PIPKitEventDispatcher.swift in Sources */,
 				6965985F9747BE484AA1812CFBBF04BC /* PIPUsable.swift in Sources */,
+				F9E75F032BB3E3A800393B44 /* PaymentManager.swift in Sources */,
+				F9E75F012BB3E3A100393B44 /* APIService.swift in Sources */,
 				0CC4F5DC73E6DCB22F0197DEC4912D65 /* SauceLive_iOS.swift in Sources */,
 				4B552740A96287A489BC04A691F4DD68 /* SauceLive_iOS-dummy.m in Sources */,
 				7AA612BDA6F65D49F5540F9685D7D47E /* UIView+Associated.swift in Sources */,
@@ -572,6 +586,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -594,6 +609,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -672,6 +689,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -694,6 +712,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -756,8 +775,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};

@@ -15,8 +15,9 @@ public enum MessageHandlerName: String {
     case moveProduct = "sauceflexMoveProduct"
     case moveBanner = "sauceflexMoveBanner"
     case onShare = "sauceflexOnShare"
-    case onMoveReward = "sauceflexMoveReward"
     case pictureInPicture = "sauceflexPictureInPicture"
+    case onReloadig = "sauceflexWebviewReloading"
+    case onReward = "sauceflexMoveReward"
     case videoUrl = "sauceflexSendVideoUrl"
 }
 
@@ -39,6 +40,9 @@ protocol SauceLiveManager: AnyObject {
     func stopPictureInPicture()
 }
 
+
+
+
 public struct SauceViewControllerConfig {
     public let url: String
     public let isEnterEnabled: Bool
@@ -48,6 +52,9 @@ public struct SauceViewControllerConfig {
     public let isMoveBannerEnabled: Bool
     public let isOnShareEnabled: Bool
     public let isPictureInPictureEnabled: Bool
+    
+    public let isReloadingEnabled: Bool
+    public let isRewardEnabled: Bool
     public let isPIPAcive: Bool
     public let isPIPSize: CGSize
     public let pipMode: PIPMode
@@ -61,6 +68,8 @@ public struct SauceViewControllerConfig {
                 isMoveBannerEnabled: Bool? = false,
                 isOnShareEnabled: Bool? = false,
                 isPictureInPictureEnabled: Bool? = false,
+                isReloadingEnabled: Bool? = false,
+                isRewardEnabled: Bool? = false,
                 isPIPAcive: Bool? = false,
                 isPIPSize: CGSize,
                 pipMode: PIPMode = .internalMode,
@@ -74,6 +83,8 @@ public struct SauceViewControllerConfig {
         self.isMoveBannerEnabled = isMoveBannerEnabled ?? false
         self.isOnShareEnabled = isOnShareEnabled ?? false
         self.isPictureInPictureEnabled = isPictureInPictureEnabled ?? false
+        self.isReloadingEnabled = isReloadingEnabled ?? false
+        self.isRewardEnabled = isRewardEnabled ?? false
         self.isPIPAcive = isPIPAcive ?? false
         self.isPIPSize = isPIPSize
         self.pipMode = pipMode
@@ -150,6 +161,9 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         if config.isMoveBannerEnabled { handlers.append(.moveBanner) }
         if config.isOnShareEnabled { handlers.append(.onShare) }
         if config.isPictureInPictureEnabled { handlers.append(.pictureInPicture) }
+        if config.isReloadingEnabled { handlers.append(.onReloadig) }
+        if config.isRewardEnabled { handlers.append(.onReward) }
+        
         self.messageHandlerNames = handlers
         registerMessageHandlers()
     }
@@ -434,5 +448,23 @@ extension SauceLiveViewController {
         }
         completionHandler(true)
     }
+}
+
+extension SauceLiveViewController {
+   public func createPayment(paymentData: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+            PaymentManager.shared.createPayment(with: paymentData, completion: completion)
+    }
+    
+    public func createPayments(paymentData: [[String: Any]], completion: @escaping (Bool, Error?) -> Void) {
+             PaymentManager.shared.createPayments(with: paymentData, completion: completion)
+     }
+    
+    public func editPayments(paymentData: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+             PaymentManager.shared.editPayment(with: paymentData, completion: completion)
+     }
+    
+    public func removePayments(paymentData: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+             PaymentManager.shared.removePayment(with: paymentData, completion: completion)
+     }
 }
 

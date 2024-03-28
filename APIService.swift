@@ -1,0 +1,80 @@
+import Foundation
+
+struct APIEnvironment {
+    enum Environment: String {
+        case development = "Development"
+        case staging = "Staging"
+        case production = "Production"
+    }
+
+    static var buildEnvironment: Environment = .development
+
+    // 현재 환경에 맞는 API 호스트 URL을 반환하는 정적 프로퍼티
+    static var current: String {
+        switch buildEnvironment {
+        case .development:
+            return "https://dev.api.sauceFlex.com/v1"
+        case .staging:
+            return "https://stage.api.sauceFlex.com/v1"
+        case .production:
+            return "https://api.sauceFlex.com/v1"
+        }
+    }
+}
+
+public enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+    case patch = "PATCH"
+}
+
+public class APIService {
+    static let shared = APIService()
+    
+    private init() {}
+    
+    public func fetchData<T: Encodable>(from urlString: String, parameters: T? = nil, method: HTTPMethod = .get, success: @escaping (Data) -> Void, failure: @escaping (Error?) -> Void) {
+        guard var urlComponents = URLComponents(string: urlString) else {
+            print("Invalid URL")
+            failure(nil)
+            return
+        }
+        
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = method.rawValue
+
+        if let parameters = parameters {
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            do {
+                let jsonData = try JSONEncoder().encode(parameters)
+                request.httpBody = jsonData
+            } catch {
+                print("Error encoding parameters: \(error)")
+                failure(error)
+                return
+            }
+        }
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else {
+                failure(error)
+                return
+            }
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                if let data = data {
+                    success(data)
+                } else {
+                    failure(nil)
+                }
+            default:
+                failure(nil)
+            }
+        }
+        
+        task.resume()
+    }
+}
