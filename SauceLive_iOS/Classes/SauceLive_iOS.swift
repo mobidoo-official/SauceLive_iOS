@@ -16,20 +16,21 @@ public enum MessageHandlerName: String {
     case moveBanner = "sauceflexMoveBanner"
     case onShare = "sauceflexOnShare"
     case pictureInPicture = "sauceflexPictureInPicture"
-    case onReloadig = "sauceflexWebviewReloading"
+    case onReloading = "sauceflexWebviewReloading"
     case onReward = "sauceflexMoveReward"
     case videoUrl = "sauceflexSendVideoUrl"
 }
 
 @objc public protocol SauceLiveDelegate: AnyObject {
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveCustomCouponMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveIssueCouponMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveEnterMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveExitMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveLoginMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveProductMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveBannerMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveOnShareMessage message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnEnterListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveExitListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveLoginListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnShareListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnPictureInPictureListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveBannerListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnWebviewReloadingListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveRewardListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveProductListener message: WKScriptMessage)
 }
 
 // SauceLiveManager 프로토콜 추가
@@ -39,9 +40,6 @@ protocol SauceLiveManager: AnyObject {
     func startPictureInPicture()
     func stopPictureInPicture()
 }
-
-
-
 
 public struct SauceViewControllerConfig {
     public let url: String
@@ -161,7 +159,7 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         if config.isMoveBannerEnabled { handlers.append(.moveBanner) }
         if config.isOnShareEnabled { handlers.append(.onShare) }
         if config.isPictureInPictureEnabled { handlers.append(.pictureInPicture) }
-        if config.isReloadingEnabled { handlers.append(.onReloadig) }
+        if config.isReloadingEnabled { handlers.append(.onReloading) }
         if config.isRewardEnabled { handlers.append(.onReward) }
         
         self.messageHandlerNames = handlers
@@ -314,20 +312,16 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
                 
             }
         case MessageHandlerName.enter.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveEnterMessage: message)
+            delegate?.sauceLiveView?(self, setOnEnterListener: message)
         case MessageHandlerName.moveExit.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveExitMessage: message)
+            delegate?.sauceLiveView?(self, setOnMoveExitListener: message)
         case MessageHandlerName.moveLogin.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveLoginMessage: message)
-        case MessageHandlerName.moveProduct.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveProductMessage: message)
-        case MessageHandlerName.moveBanner.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveBannerMessage: message)
+            delegate?.sauceLiveView?(self, setOnMoveLoginListener: message)
         case MessageHandlerName.onShare.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveOnShareMessage: message)
+            delegate?.sauceLiveView?(self, setOnShareListener: message)
         case MessageHandlerName.pictureInPicture.rawValue:
+            delegate?.sauceLiveView?(self, setOnPictureInPictureListener: message)
             if self.pipMode == .externalMode {
-                
                 let jsonString = "\(message.body)"
                 if let jsonData = jsonString.data(using: .utf8) {
                     do {
@@ -350,6 +344,17 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
             } else {
                 startPictureInPicture()
             }
+        case MessageHandlerName.moveBanner.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveBannerListener: message)
+            
+        case MessageHandlerName.onReloading.rawValue:
+            delegate?.sauceLiveView?(self, setOnWebviewReloadingListener: message)
+            
+        case MessageHandlerName.onReward.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveRewardListener: message)
+            
+        case MessageHandlerName.moveProduct.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveProductListener: message)
         default:
             break
         }
