@@ -32,7 +32,7 @@
 		1978D848D6CB385E7315D921 /* Pods-SauceLive_iOS_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SauceLive_iOS_Example.debug.xcconfig"; path = "Target Support Files/Pods-SauceLive_iOS_Example/Pods-SauceLive_iOS_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		217C5CAF79AFE148F8580411 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		26EF7A876CBC0800EC0C79BD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		51775DB87272854C7FC64459 /* SauceLive_iOS.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SauceLive_iOS.podspec; path = ../SauceLive_iOS.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		51775DB87272854C7FC64459 /* SauceLive_iOS.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SauceLive_iOS.podspec; path = ../SauceLive_iOS.podspec; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* SauceLive_iOS_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SauceLive_iOS_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };

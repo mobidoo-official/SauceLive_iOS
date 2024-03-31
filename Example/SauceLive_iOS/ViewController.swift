@@ -31,7 +31,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
@@ -67,7 +66,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // URL Text Field 설정
         contentView.addSubview(urlTextField)
         urlTextField.borderStyle = .roundedRect
-        urlTextField.placeholder = "Enter URL here"
+        urlTextField.placeholder = "Enter your broadcastId here"
         urlTextField.delegate = self
         urlTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -105,7 +104,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     private func setupCheckBoxes() {
-        let messageHandlerNames: [MessageHandlerName] = [.enter, .moveExit, .moveLogin, .moveProduct, .moveBanner, .onShare, .pictureInPicture]
+        let messageHandlerNames: [MessageHandlerName] = [.enter, .exit, .onLogin, .onProduct, .onBanner, .onShare, .onPictureInPicture, .onReward, .onReloading]
         
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -134,12 +133,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     private var handlerStates: [MessageHandlerName: Bool] = [
         .enter: false,
-        .moveExit: false,
-        .moveLogin: false,
-        .moveProduct: false,
-        .moveBanner: false,
+        .exit: false,
+        .onLogin: false,
+        .onProduct: false,
+        .onBanner: false,
         .onShare: false,
-        .pictureInPicture: false
+        .onPictureInPicture: false,
+        .onReloading: false,
+        .onReward: false
     ]
     
     @objc private func toggleCheckBox(_ sender: UIButton) {
@@ -155,7 +156,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func openWebViewController() {
-        guard let urlString = urlTextField.text else {
+        guard let urlString = urlTextField.text, urlString.count != 0 else {
             return
         }
         
@@ -166,7 +167,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func openPIPViewController() {
-        guard let urlString = urlTextField.text else {
+        guard let urlString = urlTextField.text, urlString.count != 0 else {
             return
         }
         

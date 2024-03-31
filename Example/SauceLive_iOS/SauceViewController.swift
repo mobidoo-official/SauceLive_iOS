@@ -5,64 +5,41 @@ import SauceLive_iOS
 class SauceViewController: SauceLiveViewController {
     var urlString = String()
     var handlerStates: [MessageHandlerName: Bool] = [:]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //  urlString = "https://refactor.player.sauceflex.com/broadcast/lkuiux-a5acf6ee5d024d10b41b6391575b2cd0?"
         let config = SauceViewControllerConfig(
-            url: urlString,
             isEnterEnabled: handlerStates[.enter] ?? false,
-            isMoveExitEnabled: handlerStates[.moveExit] ?? false,
-            isMoveLoginEnabled: handlerStates[.moveLogin] ?? false,
-            isMoveProductEnabled: handlerStates[.moveProduct] ?? false,
-            isMoveBannerEnabled: handlerStates[.moveBanner] ?? false,
-            isOnShareEnabled: handlerStates[.onShare] ?? false,
-            isPictureInPictureEnabled: handlerStates[.pictureInPicture] ?? false,
-            isPIPAcive: false,
-            isPIPSize: CGSize(width: 300, height: 200),
-            pipMode: .externalMode,
+            isExitEnabled: handlerStates[.exit] ?? false,
+            isLoginEnabled: handlerStates[.onLogin] ?? false,
+            isProductEnabled: handlerStates[.onProduct] ?? false,
+            isBannerEnabled: handlerStates[.onBanner] ?? false,
+            isShareEnabled: handlerStates[.onShare] ?? false,
+            isPictureInPictureEnabled: handlerStates[.onPictureInPicture] ?? false,
+            isReloadingEnabled: handlerStates[.onReloading] ?? false,
+            isRewardEnabled: handlerStates[.onReward] ?? false,
+            isPIPActive: false,
+            pipSize: CGSize(width: 150, height: 200),
+            pipMode: .internalMode,
             delegate: self
         )
         configure(with: config)
         
         let sauceLiveLib = SauceLiveLib()
-        sauceLiveLib.setInit(broadcastId: "'방송ID 를 입력해주세요")
+        sauceLiveLib.viewController = self
+        sauceLiveLib.setInit(urlString)
         sauceLiveLib.setMemberObject(
-           memberId: "string",
-           nickName: "string",
-           age: "string",
-           gender: "string"
-          );
-        sauceLiveLib.load()
-        
-        let paymentDic: [String: Any] = [
-            "orderCallBackId": "",
-            "orderId": "",
-            "payClickTime": "",
-            "productQuantity": "",
-            "amount": "",
-            "memberId": ""
-        ]
-        createPayment(paymentData: paymentDic){ success, error in
-            if success {
-            } else if let error = error {
-                print(error.localizedDescription)
-            } else {
-                
-            }
-        }
-        
-        
-        var paymentDatas: [[String: Any]] = []
-        paymentDatas.append(paymentDic)
-        
-        createPayments(paymentData: paymentDatas) { success, error in
-            if success {
-            } else if let error = error {
-                print(error.localizedDescription)
-            } else {
-                
-            }
-        }
+            memberId: "멤버ID",
+            nickName: "닉네임",
+            age: "나이",
+            gender: "성별") { success, error in
+                if success {
+                    sauceLiveLib.load()
+                } else {
+                    sauceLiveLib.load() // 게스트 로그인
+                    print(error?.localizedDescription ?? "An unknown error occurred")
+                }
+            };
     }
 }
 
@@ -70,5 +47,13 @@ class SauceViewController: SauceLiveViewController {
 extension SauceViewController: SauceLiveDelegate {
     func sauceLiveView(_ manager: SauceLiveViewController, setOnEnterListener message: WKScriptMessage) {
         print("enter")
+    }
+    
+    func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveExitListener message: WKScriptMessage) {
+        print("exit")
+    }
+    
+    func sauceLiveView(_ manager: SauceLiveViewController, setOnShareListener message: WKScriptMessage) {
+        print("share")
     }
 }

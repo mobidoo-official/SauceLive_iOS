@@ -1,58 +1,92 @@
+
 import Foundation
 import UIKit
+import AVKit
 import WebKit
 
-public struct SauceViewControllerConfig {
-    public var url: String
-    public var isEnterEnabled: Bool
-    public var isMoveExitEnabled: Bool
-    public var isMoveLoginEnabled: Bool
-    public var isMoveProductEnabled: Bool
-    public var isMoveBannerEnabled: Bool
-    public var isOnShareEnabled: Bool
-    public var isPictureInPictureEnabled: Bool
-    public var isPIPAcive: Bool
-    public var isPIPSize: CGSize
-    public weak var delegate: SauceLiveDelegate? // Delegate 추가
-    
-    public init(url: String, isEnterEnabled: Bool, isMoveExitEnabled: Bool, isMoveLoginEnabled: Bool, isMoveProductEnabled: Bool, isMoveBannerEnabled: Bool, isOnShareEnabled: Bool, isPictureInPictureEnabled: Bool, isPIPAcive: Bool, isPIPSize: CGSize, delegate: SauceLiveDelegate?) {
-            self.url = url
-            self.isEnterEnabled = isEnterEnabled
-            self.isMoveExitEnabled = isMoveExitEnabled
-            self.isMoveLoginEnabled = isMoveLoginEnabled
-            self.isMoveProductEnabled = isMoveProductEnabled
-            self.isMoveBannerEnabled = isMoveBannerEnabled
-            self.isOnShareEnabled = isOnShareEnabled
-            self.isPictureInPictureEnabled = isPictureInPictureEnabled
-            self.isPIPAcive = isPIPAcive
-            self.isPIPSize = isPIPSize
-            self.delegate = delegate
-    }
+public enum PIPMode {
+    case internalMode
+    case externalMode
 }
 
 public enum MessageHandlerName: String {
     case enter = "sauceflexEnter"
-    case moveExit = "sauceflexMoveExit"
-    case moveLogin = "sauceflexMoveLogin"
-    case moveProduct = "sauceflexMoveProduct"
-    case moveBanner = "sauceflexMoveBanner"
+    case exit = "sauceflexMoveExit"
+    case onLogin = "sauceflexMoveLogin"
+    case onProduct = "sauceflexMoveProduct"
+    case onBanner = "sauceflexMoveBanner"
     case onShare = "sauceflexOnShare"
-    case onMoveReward = "sauceflexMoveReward"
-    case pictureInPicture = "sauceflexPictureInPicture"
+    case onPictureInPicture = "sauceflexPictureInPicture"
+    case onReloading = "sauceflexWebviewReloading"
+    case onReward = "sauceflexMoveReward"
+    case videoUrl = "sauceflexSendVideoUrl"
 }
 
 @objc public protocol SauceLiveDelegate: AnyObject {
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveCustomCouponMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveIssueCouponMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveEnterMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveExitMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveLoginMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveProductMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveMoveBannerMessage message: WKScriptMessage)
-    @objc optional func sauceLiveManager(_ manager: SauceLiveViewController, didReceiveOnShareMessage message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnEnterListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveExitListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveLoginListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnShareListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnPictureInPictureListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveBannerListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnWebviewReloadingListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveRewardListener message: WKScriptMessage)
+    @objc optional func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveProductListener message: WKScriptMessage)
 }
 
-open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
+// SauceLiveManager 프로토콜 추가
+protocol SauceLiveManager: AnyObject {
+    func configure(with config: SauceViewControllerConfig)
+    func loadURL(_ urlString: String)
+    func startPictureInPicture()
+    func stopPictureInPicture()
+}
+
+public struct SauceViewControllerConfig {
+    public let isEnterEnabled: Bool
+    public let isExitEnabled: Bool
+    public let isLoginEnabled: Bool
+    public let isProductEnabled: Bool
+    public let isBannerEnabled: Bool
+    public let isShareEnabled: Bool
+    public let isPictureInPictureEnabled: Bool
+    public let isReloadingEnabled: Bool
+    public let isRewardEnabled: Bool
+    public let isPIPActive: Bool
+    
+    public let pipSize: CGSize
+    public let pipMode: PIPMode
+    public weak var delegate: SauceLiveDelegate? // Delegate 추가
+    public init(isEnterEnabled: Bool? = false,
+                isExitEnabled: Bool? = false,
+                isLoginEnabled: Bool? = false,
+                isProductEnabled: Bool? = false,
+                isBannerEnabled: Bool? = false,
+                isShareEnabled: Bool? = false,
+                isPictureInPictureEnabled: Bool? = false,
+                isReloadingEnabled: Bool? = false,
+                isRewardEnabled: Bool? = false,
+                isPIPActive: Bool? = false,
+                pipSize: CGSize,
+                pipMode: PIPMode = .internalMode,
+                delegate: SauceLiveDelegate?) {
+        self.isEnterEnabled = isEnterEnabled ?? false
+        self.isExitEnabled = isExitEnabled ?? false
+        self.isLoginEnabled = isLoginEnabled ?? false
+        self.isProductEnabled = isProductEnabled ?? false
+        self.isBannerEnabled = isBannerEnabled ?? false
+        self.isShareEnabled = isShareEnabled ?? false
+        self.isPictureInPictureEnabled = isPictureInPictureEnabled ?? false
+        self.isReloadingEnabled = isReloadingEnabled ?? false
+        self.isRewardEnabled = isRewardEnabled ?? false
+        self.isPIPActive = isPIPActive ?? false
+        self.pipSize = pipSize
+        self.pipMode = pipMode
+        self.delegate = delegate
+    }
+}
+
+open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AVPictureInPictureControllerDelegate, SauceLiveManager {
     
     public var webView: WKWebView!
     private var contentController = WKUserContentController()
@@ -65,8 +99,19 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     
     public var url: String?
     
+    public var pipController: AVPictureInPictureController?
+    public var player: AVPlayer?
+    public var playerLayer: AVPlayerLayer?
+    
+    var fullScreen: Bool = false
+    var originalViewSize: CGSize = .zero
+    var globalStartTime = CMTime(seconds: 0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    
+    private var pipMode: PIPMode = .internalMode
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
+        originalViewSize = self.view.frame.size
     }
     
     // 구성 객체를 사용하여 SauceLiveViewController 설정
@@ -74,45 +119,52 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
         configureWebView()
         setupWebViewLayout()
         setupButtons()
-        if config.isPIPAcive {
+        self.delegate = config.delegate
+        self.pipMode = config.pipMode
+        pipSize = config.pipSize
+        
+        configureMessageHandlers(with: config)
+        
+        if config.isPIPActive {
             self.view.isHidden = true
             openPIPView()
-        }
-        self.url = config.url
-        self.delegate = config.delegate
-        pipSize = config.isPIPSize
-        // Additional configuration based on the provided config
-        configureMessageHandlers(with: config)
-        if let url = self.url {
-            self.loadURL(url)
         }
     }
     
     public func loadURL(_ urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
         let request = URLRequest(url: url)
         webView.load(request)
     }
     
     private func configureMessageHandlers(with config: SauceViewControllerConfig) {
         var handlers = [MessageHandlerName]()
+        handlers.append(.videoUrl)
+        
         if config.isEnterEnabled { handlers.append(.enter) }
-        if config.isMoveExitEnabled { handlers.append(.moveExit) }
-        if config.isMoveLoginEnabled { handlers.append(.moveLogin) }
-        if config.isMoveProductEnabled { handlers.append(.moveProduct) }
-        if config.isMoveBannerEnabled { handlers.append(.moveBanner) }
-        if config.isOnShareEnabled { handlers.append(.onShare) }
-        if config.isPictureInPictureEnabled { handlers.append(.pictureInPicture) }
+        if config.isExitEnabled { handlers.append(.exit) }
+        if config.isLoginEnabled { handlers.append(.onLogin) }
+        if config.isProductEnabled { handlers.append(.onProduct) }
+        if config.isBannerEnabled { handlers.append(.onBanner) }
+        if config.isShareEnabled { handlers.append(.onShare) }
+        if config.isPictureInPictureEnabled { handlers.append(.onPictureInPicture) }
+        if config.isReloadingEnabled { handlers.append(.onReloading) }
+        if config.isRewardEnabled { handlers.append(.onReward) }
+        
         self.messageHandlerNames = handlers
         registerMessageHandlers()
     }
     
     private func registerMessageHandlers() {
-            contentController.removeAllUserScripts()
-            messageHandlerNames.forEach { name in
-                contentController.add(self, name: name.rawValue)
-            }
+        contentController.removeAllUserScripts()
+        messageHandlerNames.forEach { name in
+            contentController.add(self, name: name.rawValue)
         }
+    }
     
     public func configureWebView() {
         let configuration = WKWebViewConfiguration()
@@ -148,7 +200,7 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     private func setupButtons() {
         leftButton = UIButton(type: .custom)
         rightButton = UIButton(type: .custom)
-      
+        
         let closeImage = UIImage(named: "CloseButton", in: .module, compatibleWith: nil)
         let pipImage = UIImage(named: "PIPButton", in: .module, compatibleWith: nil)
         
@@ -195,14 +247,14 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     
     private func openPIPView() {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            self.startPictureInPicture()
-            self.view.isHidden = false
             let name = "window.dispatchEvent(sauceflexPictureInPictureOn);"
             self.webView.evaluateJavaScript(name) { (Result, Error) in
                 if let error = Error {
                     print("evaluateJavaScript Error : \(error)")
                 }
             }
+            self.startPictureInPicture()
+            self.view.isHidden = false
         }
     }
     
@@ -222,28 +274,190 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, WK
     }
     
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        
         switch message.name {
+        case MessageHandlerName.videoUrl.rawValue:
+            if self.pipMode == .externalMode {
+                let jsonString = "\(message.body)"
+                if let jsonData = jsonString.data(using: .utf8) {
+                    do {
+                        if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                            if let urlString = jsonDict["videoUrl"] as? String, url != "null" {
+                                guard let url = URL(string: urlString) else {
+                                    print("Invalid video URL")
+                                    return
+                                }
+                                player = AVPlayer(url: url)
+                                playerLayer = AVPlayerLayer(player: player)
+                                playVideoInPictureInPictureMode()
+                            } else {
+                                print("videoUrl 키에 해당하는 Url 값이 없습니다.")
+                            }
+                        }
+                    } catch {
+                        print("JSON 파싱 중 에러 발생: \(error)")
+                    }
+                }
+            }
         case MessageHandlerName.enter.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveEnterMessage: message)
-        case MessageHandlerName.moveExit.rawValue:
-            PIPKit.dismiss(animated: true)
-            delegate?.sauceLiveManager?(self, didReceiveMoveExitMessage: message)
-        case MessageHandlerName.moveLogin.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveLoginMessage: message)
-        case MessageHandlerName.moveProduct.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveProductMessage: message)
-        case MessageHandlerName.moveBanner.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveMoveBannerMessage: message)
+            delegate?.sauceLiveView?(self, setOnEnterListener: message)
+        case MessageHandlerName.exit.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveExitListener: message)
+        case MessageHandlerName.onLogin.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveLoginListener: message)
         case MessageHandlerName.onShare.rawValue:
-            delegate?.sauceLiveManager?(self, didReceiveOnShareMessage: message)
-        case MessageHandlerName.pictureInPicture.rawValue:
-            startPictureInPicture()
+            delegate?.sauceLiveView?(self, setOnShareListener: message)
+        case MessageHandlerName.onPictureInPicture.rawValue:
+            delegate?.sauceLiveView?(self, setOnPictureInPictureListener: message)
+            if self.pipMode == .externalMode {
+                let jsonString = "\(message.body)"
+                if let jsonData = jsonString.data(using: .utf8) {
+                    do {
+                        if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                            if let currentTime = jsonDict["currentTime"] as? Double, currentTime != -1 {
+                                globalStartTime = CMTime(seconds: currentTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+                            } else {
+                                print("currentTime 키에 해당하는 Double 값이 없습니다.")
+                            }
+                            self.view.frame.size = .zero
+                            view.layer.addSublayer(playerLayer!)
+                            pipController?.startPictureInPicture()
+                            pipController?.playerLayer.frame.size = .zero
+                        }
+                    } catch {
+                        print("JSON 파싱 중 에러 발생: \(error)")
+                    }
+                }
+                
+            } else {
+                startPictureInPicture()
+            }
+        case MessageHandlerName.onBanner.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveBannerListener: message)
+            
+        case MessageHandlerName.onReloading.rawValue:
+            delegate?.sauceLiveView?(self, setOnWebviewReloadingListener: message)
+            
+        case MessageHandlerName.onReward.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveRewardListener: message)
+            
+        case MessageHandlerName.onProduct.rawValue:
+            delegate?.sauceLiveView?(self, setOnMoveProductListener: message)
         default:
             break
         }
     }
+    
+    func playVideoInPictureInPictureMode() {
+        guard let playerLayer = playerLayer else { return }
+        playerLayer.frame = view.bounds // 비디오 플레이어의 크기를 설정합니다.
+        // AVPictureInPictureController가 사용 가능한지 확인합니다.
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            pipController = AVPictureInPictureController(playerLayer: playerLayer)
+            pipController?.delegate = self
+        }
+    }
 }
 
+// MARK: - WKNavigationDelegate
+extension SauceLiveViewController: WKNavigationDelegate {
+    // Handle navigation delegate methods if needed
+}
+
+// MARK: - WKUIDelegate
+extension SauceLiveViewController: WKUIDelegate {
+    // Handle UI delegate methods if needed
+}
+
+// MARK: - PIPUsable
 extension SauceLiveViewController: PIPUsable {
     public var initialState: PIPState { return .full }
 }
+
+extension SauceLiveViewController {
+    // MARK: - AVPictureInPictureControllerDelegate
+    
+    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode ended
+        print("Picture in Picture mode ended.")
+        if fullScreen {
+            DispatchQueue.main.async {
+                self.view.frame.size = self.originalViewSize
+                self.playerLayer?.removeFromSuperlayer()
+                self.pipController?.playerLayer.frame.size = self.originalViewSize
+                let name = "window.dispatchEvent(sauceFlexPIP(false));"
+                self.webView.evaluateJavaScript(name) { (Result, Error) in
+                    if let error = Error {
+                        print("evaluateJavaScript Error : \(error)")
+                    } else {
+                        
+                    }
+                }
+                let currentSeconds = CMTimeGetSeconds(self.globalStartTime )
+                let seekTime = "dispatchEvent(window.sauceflexPictureInPictureExit(\(Int(currentSeconds))))"
+                self.webView.evaluateJavaScript(seekTime) { (Result, Error) in
+                    if let error = Error {
+                        print("evaluateJavaScript Error : \(error)")
+                    } else {
+                    }
+                }
+                self.fullScreen = false
+            }
+            
+        } else {
+            self.dismiss(animated: false)
+        }
+    }
+    
+    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print("Picture in Picture mode started.")
+        let time = globalStartTime
+        player?.seek(to: time, completionHandler: { (completedSeek) in
+            if completedSeek {
+                self.player?.play()
+            }
+        })
+    }
+    
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode will end
+        print("Picture in Picture mode will end.")
+        
+        
+    }
+    
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        // PiP mode will start
+        print("Picture in Picture mode will start.")
+    }
+    
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        print("restore")
+        fullScreen = true
+        if let currentTime = player?.currentTime() {
+            globalStartTime =  currentTime
+        } else {
+            globalStartTime = CMTime(seconds: 0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        }
+        completionHandler(true)
+    }
+}
+
+extension SauceLiveViewController {
+    public func createPayment(paymentData: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+        PaymentManager.shared.createPayment(with: paymentData, completion: completion)
+    }
+    
+    public func createPaymentListTracker(paymentData: [[String: Any]], completion: @escaping (Bool, Error?) -> Void) {
+        PaymentManager.shared.createPayments(with: paymentData, completion: completion)
+    }
+    
+    public func updatePaymentTracker(paymentData: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+        PaymentManager.shared.editPayment(with: paymentData, completion: completion)
+    }
+    
+    public func deletePaymentTracker(paymentData: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+        PaymentManager.shared.removePayment(with: paymentData, completion: completion)
+    }
+}
+

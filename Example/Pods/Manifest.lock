@@ -1,5 +1,5 @@
 PODS:
-  - SauceLive_iOS (0.0.1)
+  - SauceLive_iOS (1.0.1)
 
 DEPENDENCIES:
   - SauceLive_iOS (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  SauceLive_iOS: f43c0b7c9461a98c58e3b415be779080912b3362
+  SauceLive_iOS: 1cf947027f37c1fbcb2f5bff2bd47b18c2385a12
 
 PODFILE CHECKSUM: 00d157c0dd1617af9e6d88362de5bc89cd22921d
 

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'SauceLive_iOS'
-    s.version          = '0.0.3'
+    s.version          = '1.0.1'
     s.summary          = 'SauceLive SDK'
     
     # This description is used to generate tags and improve search results.
