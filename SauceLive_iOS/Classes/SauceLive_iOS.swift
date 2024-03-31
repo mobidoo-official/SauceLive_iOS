@@ -278,7 +278,6 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     }
     
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        
         switch message.name {
         case MessageHandlerName.videoUrl.rawValue:
             if self.pipMode == .externalMode {
@@ -323,10 +322,16 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
                             } else {
                                 print("currentTime 키에 해당하는 Double 값이 없습니다.")
                             }
-                            self.view.frame.size = .zero
-                            view.layer.addSublayer(playerLayer!)
-                            pipController?.startPictureInPicture()
-                            pipController?.playerLayer.frame.size = .zero
+                            
+                            if let playerLayer = playerLayer {
+                                self.view.frame.size = .zero
+                                view.layer.addSublayer(playerLayer)
+                                pipController?.startPictureInPicture()
+                                pipController?.playerLayer.frame.size = .zero
+                            } else {
+                                startPictureInPicture()
+                            }
+                           
                         }
                     } catch {
                         print("JSON 파싱 중 에러 발생: \(error)")
