@@ -54,7 +54,7 @@ public class SauceLiveLib {
         }
     }
     
-    public func setUserAccessToken(_ token : String) {
+    public func setMemberToken(_ token : String) {
         self.accessToken = token
     }
     
@@ -101,4 +101,6 @@ public class SauceLiveLib {
             print("Broadcast ID와 Access Token 둘 다 없습니다.")
         }
     }
+    
+    
 }
