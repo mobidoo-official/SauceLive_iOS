@@ -12,7 +12,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private var selectedMessageHandlers = [MessageHandlerName]()
     
     // Segmented Control 추가
-    private let environmentSegmentedControl = UISegmentedControl(items: ["Dev", "Stage", "Prod"])
+    private let environmentSegmentedControl = UISegmentedControl(items: ["Stage", "Prod"])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,13 +150,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
         guard let urlString = urlTextField.text, urlString.count != 0 else {
             return
         }
-        
-        let selectedEnvironment = environmentSegmentedControl.titleForSegment(at: environmentSegmentedControl.selectedSegmentIndex)
-        
+        let selectedEnvironment = environmentSegmentedControl.selectedSegmentIndex
         let sauceViewController = SauceViewController()
-        sauceViewController.urlString = urlString
+        sauceViewController.broadICastID = urlString
+        sauceViewController.stageMode = !(selectedEnvironment != 0)
         sauceViewController.handlerStates = handlerStates
-        //sauceViewController.environment = selectedEnvironment
+
+        print(selectedEnvironment)
+        print(sauceViewController.stageMode)
         PIPKit.show(with: sauceViewController)
     }
     
@@ -165,12 +166,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        let selectedEnvironment = environmentSegmentedControl.titleForSegment(at: environmentSegmentedControl.selectedSegmentIndex)
-        
+        let selectedEnvironment = environmentSegmentedControl.selectedSegmentIndex
         let sauceViewController = SauceViewController()
-        sauceViewController.urlString = urlString
+        sauceViewController.broadICastID = urlString
+        sauceViewController.stageMode = !(selectedEnvironment != 0)
         sauceViewController.handlerStates = handlerStates
-        //sauceViewController.environment = selectedEnvironment
         PIPKit.show(with: sauceViewController)
     }
     

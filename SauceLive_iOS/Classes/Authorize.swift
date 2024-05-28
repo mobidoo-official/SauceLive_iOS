@@ -31,6 +31,7 @@ public class SauceLiveLib {
     var broadcastId: String?
     var accessToken: String?
     var partnerId: String?
+    
     public weak var viewController: SauceLiveViewController?
     
     // 방송 ID 설정
@@ -54,12 +55,21 @@ public class SauceLiveLib {
         }
     }
     
+    public func setStageMode(on: Bool) {
+        if on {
+            APIEnvironment.buildEnvironment = .staging
+        } else {
+            APIEnvironment.buildEnvironment = .production
+        }
+        
+    }
+    
     public func setMemberToken(_ token : String) {
         self.accessToken = token
     }
     
     // 멤버 객체 설정
-    public func setMemberObject(memberId: String, nickName: String, age: String? = nil, gender: String? = nil, completion: @escaping (Bool, Error?) -> Void) {
+    public func setMemberObject(memberId: String, nickName: String, age: String? = nil, gender: String? = nil, completion: @escaping () -> Void) {
         let paymentDic: [String: Any] = [
             "partnerId": self.partnerId ?? "",
             "memberId": memberId,
@@ -74,25 +84,27 @@ public class SauceLiveLib {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(MemberResponse.self, from: data)
                 self.accessToken = response.response.accessToken
-                completion(true, nil)
+                completion()
             } catch {
-                completion(false, error)
+                completion()
             }
         } failure: { error in
-            completion(false, error)
+            print(error?.localizedDescription ?? "An unknown error occurred")
+            completion()
         }
     }
     
-    public func load() {
+    public func moveUrlTarget() {
+        let host = APIEnvironment.player
         if let id = broadcastId, let token = accessToken {
-            let urlString = "https://player.sauceflex.com/broadcast/\(id)?accessToken=\(token)"
+            let urlString = host + "/broadcast/\(id)?accessToken=\(token)"
             DispatchQueue.main.async {
                 print(urlString)
                 self.viewController?.loadURL(urlString)
             }
         }
         else if let id = broadcastId {
-            let urlString = "https://player.sauceflex.com/broadcast/\(id)"
+            let urlString = host + "/broadcast/\(id)"
             DispatchQueue.main.async {
                 self.viewController?.loadURL(urlString)
             }
@@ -101,6 +113,4 @@ public class SauceLiveLib {
             print("Broadcast ID와 Access Token 둘 다 없습니다.")
         }
     }
-    
-    
 }

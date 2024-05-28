@@ -3,8 +3,9 @@ import WebKit
 import SauceLive_iOS
 
 class SauceViewController: SauceLiveViewController {
-    var urlString = String()
+    var broadICastID = String()
     var handlerStates: [MessageHandlerName: Bool] = [:]
+    var stageMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,18 +28,14 @@ class SauceViewController: SauceLiveViewController {
         
         let sauceLiveLib = SauceLiveLib()
         sauceLiveLib.viewController = self
-        sauceLiveLib.setInit(urlString)
+        sauceLiveLib.setInit(broadICastID)
+        sauceLiveLib.setStageMode(on: stageMode)
         sauceLiveLib.setMemberObject(
             memberId: "멤버ID",
             nickName: "닉네임",
             age: "나이",
-            gender: "성별") { success, error in
-                if success {
-                    sauceLiveLib.load()
-                } else {
-                    sauceLiveLib.load() // 게스트 로그인
-                    print(error?.localizedDescription ?? "An unknown error occurred")
-                }
+            gender: "성별") { 
+                sauceLiveLib.moveUrlTarget()
             };
     }
 }
