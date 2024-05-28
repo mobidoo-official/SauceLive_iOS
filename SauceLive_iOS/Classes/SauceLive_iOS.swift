@@ -131,6 +131,7 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
     }
     
     public func loadURL(_ urlString: String) {
+        print(urlString)
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
             return

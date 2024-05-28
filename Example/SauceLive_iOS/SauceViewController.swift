@@ -5,7 +5,8 @@ import SauceLive_iOS
 class SauceViewController: SauceLiveViewController {
     var broadICastID = String()
     var handlerStates: [MessageHandlerName: Bool] = [:]
-    var stageMode = false
+    var stageMode = 0
+    var queryString = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,13 +31,14 @@ class SauceViewController: SauceLiveViewController {
         sauceLiveLib.viewController = self
         sauceLiveLib.setInit(broadICastID)
         sauceLiveLib.setStageMode(on: stageMode)
-        sauceLiveLib.setMemberObject(
-            memberId: "멤버ID",
-            nickName: "닉네임",
-            age: "나이",
-            gender: "성별") { 
-                sauceLiveLib.moveUrlTarget()
-            };
+        sauceLiveLib.moveUrlTarget(queryString: queryString)
+//        sauceLiveLib.setMemberObject(
+//            memberId: "멤버ID",
+//            nickName: "닉네임",
+//            age: "나이",
+//            gender: "성별") { 
+//                sauceLiveLib.moveUrlTarget()
+//            };
     }
 }
 
@@ -47,6 +49,7 @@ extension SauceViewController: SauceLiveDelegate {
     }
     
     func sauceLiveView(_ manager: SauceLiveViewController, setOnMoveExitListener message: WKScriptMessage) {
+        PIPKit.dismiss(animated: true)
         print("exit")
     }
     

@@ -55,13 +55,17 @@ public class SauceLiveLib {
         }
     }
     
-    public func setStageMode(on: Bool) {
-        if on {
+    public func setStageMode(on: Int) {
+        switch on {
+        case 0:
+            APIEnvironment.buildEnvironment = .development
+        case 1:
             APIEnvironment.buildEnvironment = .staging
-        } else {
+        case 2:
             APIEnvironment.buildEnvironment = .production
+        default:
+            break
         }
-        
     }
     
     public func setMemberToken(_ token : String) {
@@ -94,17 +98,17 @@ public class SauceLiveLib {
         }
     }
     
-    public func moveUrlTarget() {
+    public func moveUrlTarget(queryString: String) {
         let host = APIEnvironment.player
         if let id = broadcastId, let token = accessToken {
-            let urlString = host + "/broadcast/\(id)?accessToken=\(token)"
+            let urlString = host + "/broadcast/\(id)?accessToken=\(token)" + queryString
             DispatchQueue.main.async {
                 print(urlString)
                 self.viewController?.loadURL(urlString)
             }
         }
         else if let id = broadcastId {
-            let urlString = host + "/broadcast/\(id)"
+            let urlString = host + "/broadcast/\(id)" + queryString
             DispatchQueue.main.async {
                 self.viewController?.loadURL(urlString)
             }

@@ -6,13 +6,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private let contentView = UIView()
     
     private let urlTextField = UITextField()
+    private let queryStringTextField = UITextField() // 쿼리 스트링 텍스트 필드 추가
     private var checkBoxes = [UIButton]()
     private let openWebViewButton = UIButton()
     private let openPIPViewButton = UIButton()
     private var selectedMessageHandlers = [MessageHandlerName]()
     
     // Segmented Control 추가
-    private let environmentSegmentedControl = UISegmentedControl(items: ["Stage", "Prod"])
+    private let environmentSegmentedControl = UISegmentedControl(items: ["dev", "Stage", "Prod"])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,12 +58,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
             urlTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
         ])
         
+        // Query String Text Field 설정
+        contentView.addSubview(queryStringTextField)
+        queryStringTextField.borderStyle = .roundedRect
+        queryStringTextField.placeholder = "Enter query string here"
+        queryStringTextField.delegate = self
+        queryStringTextField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            queryStringTextField.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 20),
+            queryStringTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            queryStringTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+        ])
+        
         // Segmented Control 설정
         contentView.addSubview(environmentSegmentedControl)
         environmentSegmentedControl.selectedSegmentIndex = 0
         environmentSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            environmentSegmentedControl.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 20),
+            environmentSegmentedControl.topAnchor.constraint(equalTo: queryStringTextField.bottomAnchor, constant: 20),
             environmentSegmentedControl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             environmentSegmentedControl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
         ])
@@ -153,7 +166,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let selectedEnvironment = environmentSegmentedControl.selectedSegmentIndex
         let sauceViewController = SauceViewController()
         sauceViewController.broadICastID = urlString
-        sauceViewController.stageMode = !(selectedEnvironment != 0)
+        sauceViewController.queryString = queryStringTextField.text ?? "" // 쿼리 스트링 설정
+        sauceViewController.stageMode = selectedEnvironment
         sauceViewController.handlerStates = handlerStates
 
         print(selectedEnvironment)
@@ -169,7 +183,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let selectedEnvironment = environmentSegmentedControl.selectedSegmentIndex
         let sauceViewController = SauceViewController()
         sauceViewController.broadICastID = urlString
-        sauceViewController.stageMode = !(selectedEnvironment != 0)
+        sauceViewController.queryString = queryStringTextField.text ?? "" // 쿼리 스트링 설정
+        sauceViewController.stageMode = selectedEnvironment
         sauceViewController.handlerStates = handlerStates
         PIPKit.show(with: sauceViewController)
     }
