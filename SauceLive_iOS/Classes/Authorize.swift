@@ -25,6 +25,11 @@ struct MemberInfo: Codable {
     let memberType: String
 }
 
+public enum MemberType: String {
+    case guest = "0"
+    case user = "1"
+}
+
 public class SauceLiveLib {
     public init() {}
 
@@ -69,10 +74,11 @@ public class SauceLiveLib {
     }
     
     // 멤버 객체 설정
-    public func setMemberObject(memberId: String, nickName: String, age: String? = nil, gender: String? = nil, completion: @escaping () -> Void) {
+    public func setMemberObject(memberId: String, nickName: String, memberType: MemberType, age: String? = nil, gender: String? = nil, completion: @escaping () -> Void) {
         let paymentDic: [String: Any] = [
             "partnerId": self.partnerId ?? "",
             "memberId": memberId,
+            "memberType" : memberType.rawValue,
             "nickName": nickName,
             "age": age ?? "ect",
             "gender": gender ?? "e",

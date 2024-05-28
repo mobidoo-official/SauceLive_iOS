@@ -33,6 +33,7 @@ class SauceViewController: SauceLiveViewController {
         sauceLiveLib.setMemberObject(
             memberId: "멤버ID",
             nickName: "닉네임",
+            memberType: .guest,
             age: "나이",
             gender: "성별") { 
                 sauceLiveLib.moveUrlTarget()

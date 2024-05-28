@@ -15,6 +15,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		74219622C2857BF886310EF8 /* Pods_SauceLive_iOS_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1DC51BD684782A9C2DC5FB7 /* Pods_SauceLive_iOS_Example.framework */; };
+		F90318862BF74A3400C3CAA5 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90318852BF74A3400C3CAA5 /* CollectionViewController.swift */; };
 		F9D67ACB2B956DA000EB21BA /* SauceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D67ACA2B956DA000EB21BA /* SauceViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,7 @@
 		BEF6C3F9034F95EF85E0BF3A /* Pods-SauceLive_iOS_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SauceLive_iOS_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SauceLive_iOS_Tests/Pods-SauceLive_iOS_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		D816D4DA2142CB339AE7DA92 /* Pods-SauceLive_iOS_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SauceLive_iOS_Tests.release.xcconfig"; path = "Target Support Files/Pods-SauceLive_iOS_Tests/Pods-SauceLive_iOS_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		E1DC51BD684782A9C2DC5FB7 /* Pods_SauceLive_iOS_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SauceLive_iOS_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F90318852BF74A3400C3CAA5 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		F9D67ACA2B956DA000EB21BA /* SauceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SauceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +100,7 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				F9D67ACA2B956DA000EB21BA /* SauceViewController.swift */,
+				F90318852BF74A3400C3CAA5 /* CollectionViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -338,6 +341,7 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				F9D67ACB2B956DA000EB21BA /* SauceViewController.swift in Sources */,
+				F90318862BF74A3400C3CAA5 /* CollectionViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

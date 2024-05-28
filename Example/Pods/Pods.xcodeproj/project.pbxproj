@@ -18,7 +18,7 @@
 		5BA376C480EC1984A922F611BFE06FBA /* UIView+Associated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A53D4C84925747EEDAD03032675FCB /* UIView+Associated.swift */; };
 		68DF515AC4E795C8FA882F717E206788 /* Pods-SauceLive_iOS_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B3952153A0BF0ECC478C8D1E2B72E84 /* Pods-SauceLive_iOS_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6A4648EF2D5293EF0B2B670ED6FBC635 /* Authorize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43BF99B8E7D88585812182A733070F5 /* Authorize.swift */; };
-		6C96571D3BE1D7925E1513AF0FAAB77C /* SauceLive_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390195DBCBB83D39D0ABD1EDB6489C0D /* SauceLive_iOS.swift */; };
+		6C96571D3BE1D7925E1513AF0FAAB77C /* SauceLive_player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390195DBCBB83D39D0ABD1EDB6489C0D /* SauceLive_player.swift */; };
 		77D0C09A34BAA2D6133C4AEE29E109C2 /* SauceLive_iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 53368C700D17C4DEE91FFEFBCDEE64B9 /* SauceLive_iOS-dummy.m */; };
 		79E5A82C15E3B1ED00095B79E8D68AF0 /* AVPIPKitVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C1251037B93B4328CAAA0106B895514 /* AVPIPKitVideoController.swift */; };
 		92FCAE17A5F2E4BABDF3D8C66443498E /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B93684946D57E95BCFBD987E6F58014 /* UIWindow+Extension.swift */; };
@@ -33,6 +33,7 @@
 		E1B4A724B96590D7325AE5012E5ADBDD /* AVPIPKitUsable+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCD4F357B20F70AB16101AAFC9E71E3 /* AVPIPKitUsable+UIKit.swift */; };
 		ECB4AC941AB75F69E6DC86EEBADFBC12 /* AVPIPKitVideoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33378DF74E7CC4B5C294BC9930B85081 /* AVPIPKitVideoProvider.swift */; };
 		ED948FC1C9E234D34453605818122E5D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		F9E2FCAD2C0595FA003344D2 /* SauceLive_collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E2FCAC2C0595FA003344D2 /* SauceLive_collection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +69,7 @@
 		1E74C84BF4D20A67AD3F88B5CAE36D8C /* SauceLive_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SauceLive_iOS.release.xcconfig; sourceTree = "<group>"; };
 		2AFCFE7B50C5F2FAA3CDCC566DB26C3B /* Pods-SauceLive_iOS_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SauceLive_iOS_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		33378DF74E7CC4B5C294BC9930B85081 /* AVPIPKitVideoProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AVPIPKitVideoProvider.swift; sourceTree = "<group>"; };
-		390195DBCBB83D39D0ABD1EDB6489C0D /* SauceLive_iOS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SauceLive_iOS.swift; path = SauceLive_iOS/Classes/SauceLive_iOS.swift; sourceTree = "<group>"; };
+		390195DBCBB83D39D0ABD1EDB6489C0D /* SauceLive_player.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SauceLive_player.swift; path = SauceLive_iOS/Classes/SauceLive_player.swift; sourceTree = "<group>"; };
 		40BA864C8595222E9FE48ECCE175EB5C /* PIPKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PIPKit.swift; sourceTree = "<group>"; };
 		4138595ED06DEC8068DD7B33B9AA3340 /* SauceLive_iOS-assets */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "SauceLive_iOS-assets"; path = assets.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B36E7E2AA644A4A3B3B70F45DE6803 /* Pods-SauceLive_iOS_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SauceLive_iOS_Example-Info.plist"; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 		ED4D476B69EC873D88C21D42CFFF29AA /* SauceLive_iOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SauceLive_iOS.podspec; sourceTree = "<group>"; tabWidth = 2; };
 		F277B89324EAF1864105BC1023A09870 /* APIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APIService.swift; path = SauceLive_iOS/Classes/APIService.swift; sourceTree = "<group>"; };
 		F3F1345BB38A33030D9946D11D4999B8 /* Pods-SauceLive_iOS_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SauceLive_iOS_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		F9E2FCAC2C0595FA003344D2 /* SauceLive_collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SauceLive_collection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,7 +172,8 @@
 				A70AFF2B407F39673DB713E4475BB646 /* Assets.xcassets */,
 				C43BF99B8E7D88585812182A733070F5 /* Authorize.swift */,
 				1716092F827B8B2002E07616C6E00109 /* PaymentManager.swift */,
-				390195DBCBB83D39D0ABD1EDB6489C0D /* SauceLive_iOS.swift */,
+				F9E2FCAC2C0595FA003344D2 /* SauceLive_collection.swift */,
+				390195DBCBB83D39D0ABD1EDB6489C0D /* SauceLive_player.swift */,
 				56B4608280E1C073FF8C846699A96971 /* PIPKit */,
 				5262D27AF48A0C0282F1BBC579AEEAE0 /* Pod */,
 				414038E951438B9457BEB7A1723FED34 /* Support Files */,
@@ -503,10 +506,11 @@
 				1D971FAED3807BB9E9009FDA42D6383E /* PIPKit.swift in Sources */,
 				C638D888C87221BB19020337D3540D67 /* PIPKitEventDispatcher.swift in Sources */,
 				06BFCABF0DEDBF64CFFD95B513D3E0C1 /* PIPUsable.swift in Sources */,
-				6C96571D3BE1D7925E1513AF0FAAB77C /* SauceLive_iOS.swift in Sources */,
+				6C96571D3BE1D7925E1513AF0FAAB77C /* SauceLive_player.swift in Sources */,
 				77D0C09A34BAA2D6133C4AEE29E109C2 /* SauceLive_iOS-dummy.m in Sources */,
 				5BA376C480EC1984A922F611BFE06FBA /* UIView+Associated.swift in Sources */,
 				C05C897286D8F5B844DFE226E0554515 /* UIViewController+Associated.swift in Sources */,
+				F9E2FCAD2C0595FA003344D2 /* SauceLive_collection.swift in Sources */,
 				92FCAE17A5F2E4BABDF3D8C66443498E /* UIWindow+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
