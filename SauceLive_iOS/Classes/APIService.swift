@@ -9,7 +9,6 @@ struct APIEnvironment {
     // 개발 환경 관리
     static var buildEnvironment: Environment = .staging
 
-    // 현재 환경에 맞는 API 호스트 URL을 반환하는 정적 프로퍼티
     static var current: String {
         switch buildEnvironment {
         case .development:
@@ -21,8 +20,18 @@ struct APIEnvironment {
         }
     }
     
-    // 현재 환경에 맞는 API 호스트 URL을 반환하는 정적 프로퍼티
     static var player: String {
+        switch buildEnvironment {
+        case .development:
+            return "https://dev.player.sauceflex.com"
+        case .staging:
+            return "https://stage.player.sauceflex.com"
+        case .production:
+            return "https://player.sauceflex.com"
+        }
+    }
+    
+    static var collection: String {
         switch buildEnvironment {
         case .development:
             return "https://dev.player.sauceflex.com"

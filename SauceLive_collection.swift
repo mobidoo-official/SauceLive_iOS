@@ -55,17 +55,17 @@ public class CollectionWebView {
     private static func getUrl(for type: WebViewType) -> URL? {
         switch type {
         case .topBanner:
-            return URL(string: "https://example.com/topBanner")
+            return URL(string: "https://stage.collection.sauceflex.com/index.html?partnerId=uiux&searchBar=false&topBanner=true&broadcast=false&curation=false&curationDetail=false&schedule=false&scheduleType=false")
         case .broadcast:
-            return URL(string: "https://example.com/broadcast")
+            return URL(string: "https://stage.collection.sauceflex.com/index.html?partnerId=uiux&searchBar=false&topBanner=false&broadcast=true&curation=false&curationDetail=false&schedule=false&scheduleType=false")
         case .schedule:
-            return URL(string: "https://example.com/schedule")
+            return URL(string: "https://stage.collection.sauceflex.com/index.html?partnerId=uiux&searchBar=false&topBanner=false&broadcast=false&curation=false&curationDetail=false&schedule=true&scheduleType=feed")
         case .broadcastTable:
-            return URL(string: "https://example.com/broadcastTable")
+            return URL(string: "https://stage.collection.sauceflex.com/index.html?partnerId=uiux&searchBar=false&topBanner=false&broadcast=false&curation=false&curationDetail=false&schedule=false&broadcastTable=true")
         case .curation:
-            return URL(string: "https://example.com/curation")
+            return URL(string: "https://stage.collection.sauceflex.com/index.html?partnerId=uiux&searchBar=false&topBanner=false&broadcast=false&curation=true&curationDetail=false&schedule=false")
         case .curationDetail:
-            return URL(string: "https://example.com/curationDetail")
+            return URL(string: "https://stage.collection.sauceflex.com/index.html?partnerId=uiux&searchBar=false&topBanner=false&broadcast=false&curation=false&curationDetail=true&schedule=false")
         }
     }
     
