@@ -184,6 +184,13 @@ open class SauceLiveViewController: UIViewController, WKScriptMessageHandler, AV
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        
+        if #available(iOS 16.4, *) {
+            webView.isInspectable = true
+        } else {
+            // Fallback on earlier versions
+        }
+        
         view.addSubview(webView)
     }
     
